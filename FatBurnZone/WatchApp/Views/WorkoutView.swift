@@ -1,190 +1,234 @@
 import SwiftUI
 
-/// 锻炼主界面
+/// 锻炼主界面 — 两页滑动切换，内容适配手表屏幕不溢出
 struct WorkoutView: View {
     @EnvironmentObject var viewModel: WorkoutViewModel
 
-    var body: some View {
-        ScrollView {
-            VStack(spacing: 10) {
-                // MARK: - 锻炼结束摘要
+    @State private var selectedPage = 0
 
-                if viewModel.showSummary {
-                    summaryCard
-                }
-
-                // MARK: - 燃脂区间标签
-
-                if let zone = viewModel.fatBurnZone {
-                    Text("燃脂区间 \(zone.formattedRange)")
-                        .font(.caption2)
-                        .foregroundColor(.secondary)
-                }
-
-                // MARK: - 实时心率表盘
-
-                ZoneGaugeView(
-                    heartRate: viewModel.heartRate,
-                    zone: viewModel.fatBurnZone ?? FatBurnZone(
-                        lowerBound: 0,
-                        upperBound: 0
-                    )
-                )
-                .padding(.vertical, 4)
-
-                // MARK: - 心率数字
-
-                VStack(spacing: 2) {
-                    Text(
-                        viewModel.isWorkingOut
-                            ? "\(Int(viewModel.heartRate))"
-                            : "--"
-                    )
-                    .font(.system(size: 48, weight: .bold, design: .rounded))
-                    .foregroundColor(heartRateColor)
-
-                    Text("BPM")
-                        .font(.caption2)
-                        .foregroundColor(.secondary)
-                }
-
-                // MARK: - 锻炼指标行：卡路里 + 时长
-
-                if viewModel.isWorkingOut {
-                    HStack(spacing: 16) {
-                        // 卡路里
-                        metricLabel(
-                            icon: "🔥",
-                            value: "\(Int(viewModel.activeCalories))",
-                            unit: "kcal",
-                            color: .orange
-                        )
-                        // 时长
-                        metricLabel(
-                            icon: "⏱",
-                            value: formattedElapsed(viewModel.elapsedSeconds),
-                            unit: "",
-                            color: .white
-                        )
-                    }
-                }
-
-                // MARK: - 状态提示
-
-                if viewModel.isWorkingOut {
-                    statusBanner
-                        .padding(.horizontal, 4)
-                }
-
-                // MARK: - 按钮
-
-                if !viewModel.showSummary {
-                    Button {
-                        if viewModel.isWorkingOut {
-                            viewModel.stopWorkout()
-                        } else {
-                            viewModel.startWorkout()
-                        }
-                    } label: {
-                        Label(
-                            viewModel.isWorkingOut ? "停止" : "开始锻炼",
-                            systemImage: viewModel.isWorkingOut
-                                ? "stop.circle.fill" : "play.circle.fill"
-                        )
-                        .font(.headline)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .tint(viewModel.isWorkingOut ? .red : .green)
-                }
-
-                if viewModel.showSummary {
-                    Button {
-                        viewModel.startWorkout()
-                    } label: {
-                        Label("重新开始", systemImage: "arrow.clockwise.circle.fill")
-                            .font(.headline)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .tint(.green)
-
-                    Button {
-                        viewModel.dismissSummary()
-                    } label: {
-                        Text("完成")
-                            .font(.caption)
-                    }
-                }
-
-                // MARK: - 错误提示
-
-                if let error = viewModel.errorMessage {
-                    Text(error)
-                        .font(.caption2)
-                        .foregroundColor(.red)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal)
-                }
-            }
-            .padding()
-        }
+    /// 空燃脂区间占位（避免强制解包）
+    private var zone: FatBurnZone {
+        viewModel.fatBurnZone ?? FatBurnZone(lowerBound: 0, upperBound: 0)
     }
 
-    // MARK: - 锻炼摘要卡片
+    var body: some View {
+        TabView(selection: $selectedPage) {
+            // ── 第 1 页：实时监测 ──
+            monitorPage
+                .tag(0)
 
-    @ViewBuilder
-    private var summaryCard: some View {
-        VStack(spacing: 6) {
+            // ── 第 2 页：控制 & 摘要 ──
+            controlPage
+                .tag(1)
+        }
+        .tabViewStyle(.page)
+        .ignoresSafeArea(edges: .bottom)
+    }
+
+    // MARK: - 第 1 页：实时监测
+
+    private var monitorPage: some View {
+        VStack(spacing: 0) {
+            Spacer(minLength: 0)
+
+            // 表盘
+            ZoneGaugeView(heartRate: viewModel.heartRate, zone: zone)
+
+            Spacer(minLength: 4)
+
+            // 心率数字
+            Text(viewModel.isWorkingOut ? "\(Int(viewModel.heartRate))" : "--")
+                .font(.system(size: 50, weight: .bold, design: .rounded))
+                .foregroundColor(heartRateColor)
+                .animation(.easeInOut(duration: 0.3), value: viewModel.heartRate)
+
+            Text("BPM")
+                .font(.caption2)
+                .foregroundColor(.secondary)
+
+            Spacer(minLength: 4)
+
+            // 卡路里 + 计时（同一行）
+            if viewModel.isWorkingOut {
+                HStack(spacing: 20) {
+                    metricView(icon: "🔥", value: "\(Int(viewModel.activeCalories))", unit: "kcal", color: .orange)
+                    metricView(icon: "⏱", value: formatted(viewModel.elapsedSeconds), unit: "", color: .white)
+                }
+                .padding(.vertical, 2)
+            }
+
+            // 状态横幅
+            if viewModel.isWorkingOut {
+                compactStatus
+                    .padding(.horizontal, 12)
+            } else if !viewModel.showSummary {
+                Text("滑动至下一页开始")
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+            }
+
+            Spacer(minLength: 0)
+
+            // 页指示器空间
+            Color.clear.frame(height: 8)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    // MARK: - 第 2 页：控制 & 摘要
+
+    private var controlPage: some View {
+        VStack(spacing: 12) {
+            Spacer(minLength: 0)
+
+            // 摘要模式
+            if viewModel.showSummary {
+                summarySection
+            } else {
+                // 燃脂区间信息
+                infoSection
+            }
+
+            Spacer(minLength: 0)
+
+            // 按钮区
+            if viewModel.showSummary {
+                Button {
+                    viewModel.startWorkout()
+                    selectedPage = 0
+                } label: {
+                    Label("重新开始", systemImage: "arrow.clockwise.circle.fill")
+                        .font(.headline)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.green)
+
+                Button {
+                    viewModel.dismissSummary()
+                } label: {
+                    Text("完成")
+                        .font(.caption)
+                }
+            } else {
+                // 开始/停止主按钮
+                Button {
+                    if viewModel.isWorkingOut {
+                        viewModel.stopWorkout()
+                    } else {
+                        viewModel.startWorkout()
+                        selectedPage = 0
+                    }
+                } label: {
+                    Label(
+                        viewModel.isWorkingOut ? "停止锻炼" : "开始锻炼",
+                        systemImage: viewModel.isWorkingOut ? "stop.circle.fill" : "play.circle.fill"
+                    )
+                    .font(.headline)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(viewModel.isWorkingOut ? .red : .green)
+            }
+
+            // 错误
+            if let error = viewModel.errorMessage {
+                Text(error)
+                    .font(.caption2)
+                    .foregroundColor(.red)
+                    .multilineTextAlignment(.center)
+            }
+
+            Color.clear.frame(height: 8)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(.horizontal, 16)
+    }
+
+    // MARK: - 摘要区
+
+    private var summarySection: some View {
+        VStack(spacing: 8) {
             Text("🏁 锻炼完成")
                 .font(.headline)
 
             HStack {
-                Text("总消耗")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                Text("总消耗").font(.caption).foregroundColor(.secondary)
                 Spacer()
-                Text("\(Int(viewModel.totalCalories))")
-                    .font(.system(.title3, design: .rounded))
-                    .fontWeight(.bold)
-                    .foregroundColor(.orange)
-                    + Text(" kcal")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                Text("\(Int(viewModel.totalCalories))").font(.title3).fontWeight(.bold).foregroundColor(.orange)
+                + Text(" kcal").font(.caption).foregroundColor(.secondary)
             }
 
             HStack {
-                Text("时长")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                Text("时长").font(.caption).foregroundColor(.secondary)
                 Spacer()
-                Text(formattedElapsed(viewModel.elapsedSeconds))
-                    .font(.body)
-                    .fontWeight(.medium)
+                Text(formatted(viewModel.elapsedSeconds)).font(.body).fontWeight(.medium)
             }
 
             HStack {
-                Text("燃脂区间")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                Text("燃脂区间").font(.caption).foregroundColor(.secondary)
                 Spacer()
-                Text(viewModel.fatBurnZone?.formattedRange ?? "--")
-                    .font(.caption)
+                Text(viewModel.fatBurnZone?.formattedRange ?? "--").font(.caption)
             }
-            .padding(.bottom, 4)
         }
-        .padding(10)
-        .frame(maxWidth: .infinity)
-        .background(Color.orange.opacity(0.1))
+        .padding(12)
+        .background(Color.orange.opacity(0.12))
         .cornerRadius(12)
     }
 
-    // MARK: - 指标标签
+    // MARK: - 信息区
 
-    private func metricLabel(
-        icon: String,
-        value: String,
-        unit: String,
-        color: Color
-    ) -> some View {
+    private var infoSection: some View {
+        VStack(spacing: 8) {
+            Text("最佳燃脂区间")
+                .font(.caption)
+                .foregroundColor(.secondary)
+
+            Text(viewModel.fatBurnZone?.formattedRange ?? "--")
+                .font(.system(.title2, design: .rounded))
+                .fontWeight(.bold)
+                .foregroundColor(.green)
+
+            if viewModel.isWorkingOut {
+                VStack(spacing: 4) {
+                    Text("🔥 \(Int(viewModel.activeCalories)) kcal")
+                        .font(.caption)
+                    Text("⏱ \(formatted(viewModel.elapsedSeconds))")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+            }
+        }
+    }
+
+    // MARK: - 紧凑状态条
+
+    private var compactStatus: some View {
+        Group {
+            if let message = viewModel.alertMessage {
+                Text(message)
+                    .font(.system(size: 10))
+                    .fontWeight(.medium)
+                    .multilineTextAlignment(.center)
+                    .padding(.vertical, 4)
+                    .padding(.horizontal, 8)
+                    .frame(maxWidth: .infinity)
+                    .background(alertBannerColor.opacity(0.15))
+                    .cornerRadius(6)
+            } else if viewModel.zoneStatus == .inZone {
+                Text("🟢 燃脂最佳")
+                    .font(.system(size: 10))
+                    .fontWeight(.medium)
+                    .padding(.vertical, 4)
+                    .padding(.horizontal, 8)
+                    .frame(maxWidth: .infinity)
+                    .background(Color.green.opacity(0.15))
+                    .cornerRadius(6)
+            }
+        }
+    }
+
+    // MARK: - 辅助组件
+
+    private func metricView(icon: String, value: String, unit: String, color: Color) -> some View {
         HStack(spacing: 2) {
             Text(icon)
             Text(value)
@@ -193,43 +237,16 @@ struct WorkoutView: View {
                 .foregroundColor(color)
             if !unit.isEmpty {
                 Text(unit)
-                    .font(.caption2)
+                    .font(.system(size: 8))
                     .foregroundColor(.secondary)
             }
         }
     }
 
-    // MARK: - 状态横幅
-
-    @ViewBuilder
-    private var statusBanner: some View {
-        if let message = viewModel.alertMessage {
-            Text(message)
-                .font(.caption)
-                .fontWeight(.medium)
-                .multilineTextAlignment(.center)
-                .padding(8)
-                .frame(maxWidth: .infinity)
-                .background(statusBannerColor.opacity(0.15))
-                .cornerRadius(8)
-        } else if viewModel.zoneStatus == .inZone && viewModel.isWorkingOut {
-            Text("🟢 燃脂最佳状态")
-                .font(.caption)
-                .fontWeight(.medium)
-                .padding(8)
-                .frame(maxWidth: .infinity)
-                .background(Color.green.opacity(0.15))
-                .cornerRadius(8)
-        }
-    }
-
-    // MARK: - 格式化
-
-    private func formattedElapsed(_ seconds: TimeInterval) -> String {
-        let total = Int(seconds)
-        let mins = total / 60
-        let secs = total % 60
-        return String(format: "%d:%02d", mins, secs)
+    private func formatted(_ seconds: TimeInterval) -> String {
+        let m = Int(seconds) / 60
+        let s = Int(seconds) % 60
+        return String(format: "%d:%02d", m, s)
     }
 
     // MARK: - 颜色
@@ -242,7 +259,7 @@ struct WorkoutView: View {
         }
     }
 
-    private var statusBannerColor: Color {
+    private var alertBannerColor: Color {
         switch viewModel.zoneStatus {
         case .inZone: return .green
         case .below: return .blue
