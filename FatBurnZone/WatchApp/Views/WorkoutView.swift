@@ -1,25 +1,19 @@
 import SwiftUI
 
-/// 锻炼主界面 — 两页滑动切换，内容适配手表屏幕不溢出
+/// 锻炼主界面 — 两页滑动切换，每页支持表冠/触屏滚动
 struct WorkoutView: View {
     @EnvironmentObject var viewModel: WorkoutViewModel
 
     @State private var selectedPage = 0
 
-    /// 空燃脂区间占位（避免强制解包）
     private var zone: FatBurnZone {
         viewModel.fatBurnZone ?? FatBurnZone(lowerBound: 0, upperBound: 0)
     }
 
     var body: some View {
         TabView(selection: $selectedPage) {
-            // ── 第 1 页：实时监测 ──
-            monitorPage
-                .tag(0)
-
-            // ── 第 2 页：控制 & 摘要 ──
-            controlPage
-                .tag(1)
+            monitorPage.tag(0)
+            controlPage.tag(1)
         }
         .tabViewStyle(.page)
         .ignoresSafeArea(edges: .bottom)
@@ -28,120 +22,105 @@ struct WorkoutView: View {
     // MARK: - 第 1 页：实时监测
 
     private var monitorPage: some View {
-        VStack(spacing: 0) {
-            Spacer(minLength: 0)
+        ScrollView {
+            VStack(spacing: 8) {
+                // 表盘
+                ZoneGaugeView(heartRate: viewModel.heartRate, zone: zone)
 
-            // 表盘
-            ZoneGaugeView(heartRate: viewModel.heartRate, zone: zone)
+                // 心率数字
+                Text(displayHeartRate)
+                    .font(.system(size: 50, weight: .bold, design: .rounded))
+                    .foregroundColor(heartRateColor)
+                    .animation(.easeInOut(duration: 0.3), value: viewModel.heartRate)
+                    .contentTransition(.numericText())
 
-            Spacer(minLength: 4)
-
-            // 心率数字（未获取到真实值时不显示 0）
-            Text(displayHeartRate)
-                .font(.system(size: 50, weight: .bold, design: .rounded))
-                .foregroundColor(heartRateColor)
-                .animation(.easeInOut(duration: 0.3), value: viewModel.heartRate)
-                .contentTransition(.numericText())
-
-            Text("BPM")
-                .font(.caption2)
-                .foregroundColor(.secondary)
-
-            Spacer(minLength: 4)
-
-            // 卡路里 + 计时（同一行）
-            if viewModel.isWorkingOut {
-                HStack(spacing: 20) {
-                    metricView(icon: "🔥", value: "\(Int(viewModel.activeCalories))", unit: "kcal", color: .orange)
-                    metricView(icon: "⏱", value: formatted(viewModel.elapsedSeconds), unit: "", color: .white)
-                }
-                .padding(.vertical, 2)
-            }
-
-            // 状态横幅
-            if viewModel.isWorkingOut {
-                compactStatus
-                    .padding(.horizontal, 12)
-            } else if !viewModel.showSummary {
-                Text("滑动至下一页开始")
+                Text("BPM")
                     .font(.caption2)
                     .foregroundColor(.secondary)
+
+                // 卡路里 + 计时
+                if viewModel.isWorkingOut {
+                    HStack(spacing: 20) {
+                        metricView(icon: "🔥", value: "\(Int(viewModel.activeCalories))", unit: "kcal", color: .orange)
+                        metricView(icon: "⏱", value: formatted(viewModel.elapsedSeconds), unit: "", color: .white)
+                    }
+                }
+
+                // 状态横幅
+                if viewModel.isWorkingOut {
+                    compactStatus
+                        .padding(.horizontal, 8)
+                } else if !viewModel.showSummary {
+                    Text("← 滑动至下一页开始 →")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                }
             }
-
-            Spacer(minLength: 0)
-
-            // 页指示器空间
-            Color.clear.frame(height: 8)
+            .padding(.horizontal, 12)
+            .frame(maxWidth: .infinity)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     // MARK: - 第 2 页：控制 & 摘要
 
     private var controlPage: some View {
-        VStack(spacing: 12) {
-            Spacer(minLength: 0)
-
-            // 摘要模式
-            if viewModel.showSummary {
-                summarySection
-            } else {
-                // 燃脂区间信息
-                infoSection
-            }
-
-            Spacer(minLength: 0)
-
-            // 按钮区
-            if viewModel.showSummary {
-                Button {
-                    viewModel.startWorkout()
-                    selectedPage = 0
-                } label: {
-                    Label("重新开始", systemImage: "arrow.clockwise.circle.fill")
-                        .font(.headline)
+        ScrollView {
+            VStack(spacing: 12) {
+                // 摘要 / 信息
+                if viewModel.showSummary {
+                    summarySection
+                } else {
+                    infoSection
                 }
-                .buttonStyle(.borderedProminent)
-                .tint(.green)
 
-                Button {
-                    viewModel.dismissSummary()
-                } label: {
-                    Text("完成")
-                        .font(.caption)
-                }
-            } else {
-                // 开始/停止主按钮
-                Button {
-                    if viewModel.isWorkingOut {
-                        viewModel.stopWorkout()
-                    } else {
+                // 按钮
+                if viewModel.showSummary {
+                    Button {
                         viewModel.startWorkout()
                         selectedPage = 0
+                    } label: {
+                        Label("重新开始", systemImage: "arrow.clockwise.circle.fill")
+                            .font(.headline)
                     }
-                } label: {
-                    Label(
-                        viewModel.isWorkingOut ? "停止锻炼" : "开始锻炼",
-                        systemImage: viewModel.isWorkingOut ? "stop.circle.fill" : "play.circle.fill"
-                    )
-                    .font(.headline)
+                    .buttonStyle(.borderedProminent)
+                    .tint(.green)
+
+                    Button {
+                        viewModel.dismissSummary()
+                    } label: {
+                        Text("完成")
+                            .font(.caption)
+                    }
+                } else {
+                    Button {
+                        if viewModel.isWorkingOut {
+                            viewModel.stopWorkout()
+                        } else {
+                            viewModel.startWorkout()
+                            selectedPage = 0
+                        }
+                    } label: {
+                        Label(
+                            viewModel.isWorkingOut ? "停止锻炼" : "开始锻炼",
+                            systemImage: viewModel.isWorkingOut ? "stop.circle.fill" : "play.circle.fill"
+                        )
+                        .font(.headline)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(viewModel.isWorkingOut ? .red : .green)
                 }
-                .buttonStyle(.borderedProminent)
-                .tint(viewModel.isWorkingOut ? .red : .green)
-            }
 
-            // 错误
-            if let error = viewModel.errorMessage {
-                Text(error)
-                    .font(.caption2)
-                    .foregroundColor(.red)
-                    .multilineTextAlignment(.center)
+                // 错误提示 — 始终可见，不会被遮挡
+                if let error = viewModel.errorMessage {
+                    Text(error)
+                        .font(.caption2)
+                        .foregroundColor(.red)
+                        .multilineTextAlignment(.center)
+                }
             }
-
-            Color.clear.frame(height: 8)
+            .padding(.horizontal, 16)
+            .frame(maxWidth: .infinity)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding(.horizontal, 16)
     }
 
     // MARK: - 摘要区
@@ -179,29 +158,21 @@ struct WorkoutView: View {
 
     private var infoSection: some View {
         VStack(spacing: 8) {
-            // 年龄 + 公式
             if let profile = viewModel.userProfile {
                 HStack {
-                    Text("年龄")
-                        .font(.caption2)
-                        .foregroundColor(.secondary)
+                    Text("年龄").font(.caption2).foregroundColor(.secondary)
                     Spacer()
-                    Text("\(profile.age) 岁")
-                        .font(.caption2)
+                    Text("\(profile.age) 岁").font(.caption2)
                 }
 
                 HStack {
-                    Text("最大心率")
-                        .font(.caption2)
-                        .foregroundColor(.secondary)
+                    Text("最大心率").font(.caption2).foregroundColor(.secondary)
                     Spacer()
-                    Text("220 - \(profile.age) = \(220 - profile.age)")
-                        .font(.caption2)
+                    Text("220 - \(profile.age) = \(220 - profile.age)").font(.caption2)
                 }
                 .padding(.bottom, 2)
             }
 
-            // 区间结果
             Text("燃脂区间 \(viewModel.fatBurnZone?.formattedRange ?? "--")")
                 .font(.system(.title3, design: .rounded))
                 .fontWeight(.bold)
@@ -211,7 +182,6 @@ struct WorkoutView: View {
                 .font(.system(size: 9))
                 .foregroundColor(.secondary)
 
-            // 锻炼中额外指标
             if viewModel.isWorkingOut {
                 Divider()
                 HStack(spacing: 16) {
@@ -220,7 +190,6 @@ struct WorkoutView: View {
                 }
             }
 
-            // 重置年龄入口
             Divider()
             Button {
                 viewModel.resetProfile()
@@ -231,7 +200,7 @@ struct WorkoutView: View {
         }
     }
 
-    // MARK: - 紧凑状态条（极简风格）
+    // MARK: - 紧凑状态条
 
     private var compactStatus: some View {
         let (label, tint): (String, Color) = {
@@ -251,10 +220,7 @@ struct WorkoutView: View {
                     .foregroundColor(tint)
                     .padding(.vertical, 3)
                     .padding(.horizontal, 10)
-                    .background(
-                        Capsule()
-                            .fill(tint.opacity(0.12))
-                    )
+                    .background(Capsule().fill(tint.opacity(0.12)))
             }
         }
     }
@@ -269,21 +235,16 @@ struct WorkoutView: View {
                 .fontWeight(.semibold)
                 .foregroundColor(color)
             if !unit.isEmpty {
-                Text(unit)
-                    .font(.system(size: 8))
-                    .foregroundColor(.secondary)
+                Text(unit).font(.system(size: 8)).foregroundColor(.secondary)
             }
         }
     }
 
-    /// 心率显示文本：无真实数据时不显示 0
+    // MARK: - 格式化 & 计算
+
     private var displayHeartRate: String {
-        if viewModel.isWorkingOut && viewModel.heartRate > 0 {
-            return "\(Int(viewModel.heartRate))"
-        }
-        if viewModel.isWorkingOut {
-            return "···"
-        }
+        if viewModel.isWorkingOut && viewModel.heartRate > 0 { return "\(Int(viewModel.heartRate))" }
+        if viewModel.isWorkingOut { return "···" }
         return "--"
     }
 
