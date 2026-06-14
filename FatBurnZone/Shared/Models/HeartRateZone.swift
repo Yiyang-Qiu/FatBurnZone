@@ -11,7 +11,7 @@ enum HeartRateZoneStatus: String, Codable {
 }
 
 /// 燃脂区间计算结果
-struct FatBurnZone {
+struct FatBurnZone: Codable {
     /// 区间下限 BPM（60% 最大心率）
     let lowerBound: Double
     /// 区间上限 BPM（70% 最大心率）

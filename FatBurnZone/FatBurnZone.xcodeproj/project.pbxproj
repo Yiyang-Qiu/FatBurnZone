@@ -25,6 +25,8 @@
 		E2572EABBCCD3CAA4424EB39 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1A5EC5E43ACA86881B549F /* SettingsView.swift */; };
 		E6F9C5E0A03C296B16F34480 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A10CC545B25AC406FEE5EF4 /* Constants.swift */; };
 		EB4C28DCCEC6B73CAD5652F1 /* SetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5010AC9F8760C48C16750E8 /* SetupView.swift */; };
+		11A1B2C3D4E5F6A7B8C9D0E1 /* HealthKitUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0A1B2C3D4E5F6A7B8C9D0E1 /* HealthKitUtilities.swift */; };
+		22A1B2C3D4E5F6A7B8C9D0E2 /* HealthKitUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0A1B2C3D4E5F6A7B8C9D0E1 /* HealthKitUtilities.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +49,7 @@
 		D0D9BFBCF4B10AF459BD7C96 /* iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSApp.swift; sourceTree = "<group>"; };
 		DAE3FCBC9CFD53E389F3CCD9 /* HeartRateZoneCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartRateZoneCalculator.swift; sourceTree = "<group>"; };
 		F5010AC9F8760C48C16750E8 /* SetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupView.swift; sourceTree = "<group>"; };
+		F0A1B2C3D4E5F6A7B8C9D0E1 /* HealthKitUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitUtilities.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -93,6 +96,7 @@
 			children = (
 				4A10CC545B25AC406FEE5EF4 /* Constants.swift */,
 				DAE3FCBC9CFD53E389F3CCD9 /* HeartRateZoneCalculator.swift */,
+				F0A1B2C3D4E5F6A7B8C9D0E1 /* HealthKitUtilities.swift */,
 				0E0CF8431CF42F011B209B9D /* Models */,
 			);
 			path = Shared;
@@ -216,6 +220,7 @@
 				E2572EABBCCD3CAA4424EB39 /* SettingsView.swift in Sources */,
 				69F89555EFA5F3E11DE150BB /* UserProfile.swift in Sources */,
 				D25E8A103C980FDF9ACC101E /* iOSApp.swift in Sources */,
+				22A1B2C3D4E5F6A7B8C9D0E2 /* HealthKitUtilities.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -235,6 +240,7 @@
 				5A09A5175708BADD71E15C7F /* WorkoutView.swift in Sources */,
 				31136FFEECA44BD4CE38BE23 /* WorkoutViewModel.swift in Sources */,
 				22E64300A0271545214D3E1F /* ZoneGaugeView.swift in Sources */,
+				11A1B2C3D4E5F6A7B8C9D0E1 /* HealthKitUtilities.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

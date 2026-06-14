@@ -99,6 +99,12 @@ struct SettingsView: View {
 
     private func fetchAgeFromHealthKit() async {
         isFetching = true
+        defer { isFetching = false }
+
+        guard HKHealthStore.isHealthDataAvailable() else {
+            print("HealthKit 在当前设备上不可用")
+            return
+        }
 
         // 请求授权
         let readTypes: Set<HKObjectType> = {
@@ -117,13 +123,7 @@ struct SettingsView: View {
                 read: readTypes
             )
 
-            let dobComponents = try healthStore.dateOfBirthComponents()
-            if let dob = dobComponents.date,
-               let age = Calendar.current.dateComponents(
-                   [.year],
-                   from: dob,
-                   to: Date()
-               ).year {
+            if let age = try healthStore.fetchAge() {
                 healthKitAge = age
                 manualAge = Double(age)
                 storedAge = age
@@ -131,7 +131,5 @@ struct SettingsView: View {
         } catch {
             print("获取年龄失败: \(error.localizedDescription)")
         }
-
-        isFetching = false
     }
 }

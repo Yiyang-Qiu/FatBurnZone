@@ -199,7 +199,7 @@ struct WorkoutView: View {
     private var compactStatus: some View {
         let (label, tint): (String, Color) = {
             if let message = viewModel.alertMessage {
-                return (message, alertBannerColor)
+                return (message, heartRateColor)
             } else if viewModel.zoneStatus == .inZone {
                 return ("燃脂最佳", .green)
             } else {
@@ -251,14 +251,6 @@ struct WorkoutView: View {
     // MARK: - 颜色
 
     private var heartRateColor: Color {
-        switch viewModel.zoneStatus {
-        case .inZone: return .green
-        case .below: return .orange
-        case .above: return .red
-        }
-    }
-
-    private var alertBannerColor: Color {
         switch viewModel.zoneStatus {
         case .inZone: return .green
         case .below: return .orange

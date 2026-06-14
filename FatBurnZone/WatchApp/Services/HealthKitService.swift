@@ -83,17 +83,7 @@ final class HealthKitService: NSObject, ObservableObject {
     // MARK: - 年龄获取
 
     func fetchAgeFromHealthKit() throws -> Int? {
-        let dobComponents = try healthStore.dateOfBirthComponents()
-
-        guard let dateOfBirth = dobComponents.date,
-              let age = Calendar.current.dateComponents(
-                  [.year],
-                  from: dateOfBirth,
-                  to: Date()
-              ).year else {
-            return nil
-        }
-        return age
+        return try healthStore.fetchAge()
     }
 
     // MARK: - 锻炼控制
@@ -187,15 +177,15 @@ final class HealthKitService: NSObject, ObservableObject {
     // MARK: - 时长计时器
 
     private func startElapsedTimer() {
-        elapsedTimer = Timer.scheduledTimer(
-            withTimeInterval: 1.0,
-            repeats: true
-        ) { [weak self] _ in
+        let timer = Timer(timeInterval: 1.0, repeats: true) { [weak self] _ in
             guard let self, let start = self.workoutStartDate else { return }
             Task { @MainActor [weak self] in
                 self?.elapsedSeconds = Date().timeIntervalSince(start)
             }
         }
+        // 使用 .common 模式，避免用户滚动表冠/触屏时计时暂停
+        RunLoop.main.add(timer, forMode: .common)
+        elapsedTimer = timer
     }
 
     private func stopElapsedTimer() {
