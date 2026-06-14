@@ -36,11 +36,12 @@ struct WorkoutView: View {
 
             Spacer(minLength: 4)
 
-            // 心率数字
-            Text(viewModel.isWorkingOut ? "\(Int(viewModel.heartRate))" : "--")
+            // 心率数字（未获取到真实值时不显示 0）
+            Text(displayHeartRate)
                 .font(.system(size: 50, weight: .bold, design: .rounded))
                 .foregroundColor(heartRateColor)
                 .animation(.easeInOut(duration: 0.3), value: viewModel.heartRate)
+                .contentTransition(.numericText())
 
             Text("BPM")
                 .font(.caption2)
@@ -242,6 +243,17 @@ struct WorkoutView: View {
                     .foregroundColor(.secondary)
             }
         }
+    }
+
+    /// 心率显示文本：无真实数据时不显示 0
+    private var displayHeartRate: String {
+        if viewModel.isWorkingOut && viewModel.heartRate > 0 {
+            return "\(Int(viewModel.heartRate))"
+        }
+        if viewModel.isWorkingOut {
+            return "···"
+        }
+        return "--"
     }
 
     private func formatted(_ seconds: TimeInterval) -> String {
