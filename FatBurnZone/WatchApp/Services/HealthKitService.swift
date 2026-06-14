@@ -103,6 +103,15 @@ final class HealthKitService: NSObject, ObservableObject {
             throw HealthKitError.notAuthorized
         }
 
+        // 先同步获取最近一次心率，避免开始后显示 0 等待十几秒
+        fetchLatestHeartRate { [weak self] latestBPM in
+            Task { @MainActor in
+                if let bpm = latestBPM {
+                    self?.heartRate = bpm
+                }
+            }
+        }
+
         let configuration = HKWorkoutConfiguration()
         configuration.activityType = .walking
         configuration.locationType = .indoor
@@ -195,6 +204,36 @@ final class HealthKitService: NSObject, ObservableObject {
     }
 
     // MARK: - 心率实时查询
+
+    /// 快速获取最近一条心率样本，用于锻炼开始时立即显示
+    private func fetchLatestHeartRate(completion: @escaping (Double?) -> Void) {
+        let predicate = HKQuery.predicateForSamples(
+            withStart: Date().addingTimeInterval(-300), // 最近 5 分钟
+            end: Date(),
+            options: []
+        )
+        let sortDescriptor = NSSortDescriptor(
+            key: HKSampleSortIdentifierEndDate,
+            ascending: false
+        )
+
+        let query = HKSampleQuery(
+            sampleType: heartRateType,
+            predicate: predicate,
+            limit: 1,
+            sortDescriptors: [sortDescriptor]
+        ) { _, samples, error in
+            guard error == nil,
+                  let sample = samples?.first as? HKQuantitySample else {
+                completion(nil)
+                return
+            }
+            let bpm = sample.quantity.doubleValue(for: HKUnit(from: "count/min"))
+            completion(bpm)
+        }
+
+        healthStore.execute(query)
+    }
 
     private func startHeartRateQuery() {
         let predicate = HKQuery.predicateForSamples(
