@@ -2,7 +2,7 @@ import Foundation
 import HealthKit
 import Combine
 
-/// 管理所有 HealthKit 交互：授权、年龄查询、心率实时流、锻炼会话
+/// 管理所有 HealthKit 交互：授权、年龄查询、心率实时流、卡路里跟踪、锻炼会话
 final class HealthKitService: NSObject, ObservableObject {
 
     // MARK: - 公开属性
@@ -10,7 +10,16 @@ final class HealthKitService: NSObject, ObservableObject {
     /// 实时心率 BPM（每秒更新）
     @Published var heartRate: Double = 0
 
-    /// 是否正在监听心率
+    /// 实时活跃卡路里（千卡）
+    @Published var activeCalories: Double = 0
+
+    /// 本次锻炼总消耗卡路里（千卡）
+    @Published var totalCalories: Double = 0
+
+    /// 锻炼已过时长（秒）
+    @Published var elapsedSeconds: TimeInterval = 0
+
+    /// 是否正在监听
     @Published var isMonitoring: Bool = false
 
     /// 授权状态
@@ -23,15 +32,27 @@ final class HealthKitService: NSObject, ObservableObject {
     private var heartRateQuery: HKAnchoredObjectQuery?
     private var workoutBuilder: HKLiveWorkoutBuilder?
 
-    /// 心率数据类型的标识符
+    /// 锻炼开始时间
+    private var workoutStartDate: Date?
+    /// 每秒更新时长的 Timer
+    private var elapsedTimer: Timer?
+
+    /// 心率数据类型
     private let heartRateType = HKQuantityType.quantityType(
         forIdentifier: .heartRate
     )!
 
+    /// 活跃卡路里数据类型
+    private let activeEnergyType = HKQuantityType.quantityType(
+        forIdentifier: .activeEnergyBurned
+    )!
+
     /// 可读取的数据类型集合
     private var readTypes: Set<HKObjectType> {
-        var types: Set<HKObjectType> = [heartRateType]
-        // 出生日期特征
+        var types: Set<HKObjectType> = [
+            heartRateType,
+            activeEnergyType,
+        ]
         if let dobType = HKCharacteristicType.characteristicType(
             forIdentifier: .dateOfBirth
         ) {
@@ -42,14 +63,12 @@ final class HealthKitService: NSObject, ObservableObject {
 
     /// 可写入的数据类型集合
     private var shareTypes: Set<HKSampleType> {
-        [heartRateType, HKQuantityType.workoutType()]
+        [heartRateType, activeEnergyType, HKQuantityType.workoutType()]
     }
 
     // MARK: - 授权
 
-    /// 请求 HealthKit 读取和写入权限
     func requestAuthorization() async throws {
-        // 检查 HealthKit 在当前设备上是否可用
         guard HKHealthStore.isHealthDataAvailable() else {
             throw HealthKitError.notAvailable
         }
@@ -58,14 +77,11 @@ final class HealthKitService: NSObject, ObservableObject {
             toShare: shareTypes,
             read: readTypes
         )
-        // 类型转换: MainActor 保证 UI 更新安全
         await MainActor.run { isAuthorized = true }
     }
 
     // MARK: - 年龄获取
 
-    /// 从 HealthKit 用户画像获取年龄
-    /// - Returns: 年龄值；如果未设置出生日期则返回 nil
     func fetchAgeFromHealthKit() throws -> Int? {
         let dobComponents = try healthStore.dateOfBirthComponents()
 
@@ -82,25 +98,21 @@ final class HealthKitService: NSObject, ObservableObject {
 
     // MARK: - 锻炼控制
 
-    /// 启动锻炼会话并开始监听心率
     func startWorkout() throws {
         guard isAuthorized else {
             throw HealthKitError.notAuthorized
         }
 
-        // 配置锻炼会话
         let configuration = HKWorkoutConfiguration()
         configuration.activityType = .walking
         configuration.locationType = .indoor
 
-        // 创建会话
         let session = try HKWorkoutSession(
             healthStore: healthStore,
             configuration: configuration
         )
         self.workoutSession = session
 
-        // 关联 builder 用于获取实时心率
         let builder = session.associatedWorkoutBuilder()
         builder.dataSource = HKLiveWorkoutDataSource(
             healthStore: healthStore,
@@ -109,41 +121,77 @@ final class HealthKitService: NSObject, ObservableObject {
         builder.delegate = self
         self.workoutBuilder = builder
 
-        // 设置会话代理
         session.delegate = self
 
-        // 开始
-        session.startActivity(with: Date())
-        builder.beginCollection(withStart: Date(), completion: { _, _ in })
+        let now = Date()
+        workoutStartDate = now
+        session.startActivity(with: now)
+        builder.beginCollection(withStart: now, completion: { _, _ in })
 
-        // 启动心率锚定查询
         startHeartRateQuery()
+        startElapsedTimer()
 
         Task { @MainActor in
             isMonitoring = true
+            activeCalories = 0
+            totalCalories = 0
+            elapsedSeconds = 0
         }
     }
 
-    /// 停止锻炼会话
     func stopWorkout() {
-        // 停止心率查询
+        // 停止前从 builder 获取最终总卡路里
+        if let builder = workoutBuilder {
+            let kcalUnit = HKUnit.kilocalorie()
+            if let energyStat = builder.statistics(
+                for: activeEnergyType
+            ) {
+                let total = energyStat.sumQuantity()?.doubleValue(
+                    for: kcalUnit
+                ) ?? 0
+                Task { @MainActor [weak self] in
+                    self?.totalCalories = total
+                }
+            }
+        }
+
+        stopElapsedTimer()
+
         if let query = heartRateQuery {
             healthStore.stop(query)
             heartRateQuery = nil
         }
 
-        // 结束 builder
         workoutBuilder?.endCollection(withEnd: Date(), completion: { _, _ in })
         workoutBuilder = nil
 
-        // 结束会话
         workoutSession?.end()
         workoutSession = nil
 
-        Task { @MainActor in
-            isMonitoring = false
-            heartRate = 0
+        Task { @MainActor [weak self] in
+            self?.isMonitoring = false
+            self?.heartRate = 0
+            self?.activeCalories = 0
         }
+    }
+
+    // MARK: - 时长计时器
+
+    private func startElapsedTimer() {
+        elapsedTimer = Timer.scheduledTimer(
+            withTimeInterval: 1.0,
+            repeats: true
+        ) { [weak self] _ in
+            guard let self, let start = self.workoutStartDate else { return }
+            Task { @MainActor [weak self] in
+                self?.elapsedSeconds = Date().timeIntervalSince(start)
+            }
+        }
+    }
+
+    private func stopElapsedTimer() {
+        elapsedTimer?.invalidate()
+        elapsedTimer = nil
     }
 
     // MARK: - 心率实时查询
@@ -168,7 +216,6 @@ final class HealthKitService: NSObject, ObservableObject {
             self?.processHeartRateSamples(samples)
         }
 
-        // 当新样本到达时更新
         query.updateHandler = { [weak self] _, samples, _, _, error in
             if let error = error {
                 print("[HealthKitService] 心率更新错误: \(error.localizedDescription)")
@@ -181,7 +228,6 @@ final class HealthKitService: NSObject, ObservableObject {
         self.heartRateQuery = query
     }
 
-    /// 解析心率样本，提取最新 BPM 值
     private func processHeartRateSamples(_ samples: [HKSample]?) {
         guard let quantitySamples = samples as? [HKQuantitySample],
               let latest = quantitySamples.last else {
@@ -234,7 +280,19 @@ extension HealthKitService: HKLiveWorkoutBuilderDelegate {
         _ workoutBuilder: HKLiveWorkoutBuilder,
         didCollectDataOf collectedTypes: Set<HKSampleType>
     ) {
-        // 心率数据由 AnchoredObjectQuery 处理
+        guard collectedTypes.contains(activeEnergyType) else { return }
+
+        let kcalUnit = HKUnit.kilocalorie()
+        if let energyStat = workoutBuilder.statistics(
+            for: activeEnergyType
+        ) {
+            let calories = energyStat.sumQuantity()?.doubleValue(
+                for: kcalUnit
+            ) ?? 0
+            Task { @MainActor [weak self] in
+                self?.activeCalories = calories
+            }
+        }
     }
 
     func workoutBuilderDidCollectEvent(
