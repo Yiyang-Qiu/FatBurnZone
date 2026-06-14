@@ -175,27 +175,58 @@ struct WorkoutView: View {
         .cornerRadius(12)
     }
 
-    // MARK: - 信息区
+    // MARK: - 信息区（公式 & 区间）
 
     private var infoSection: some View {
         VStack(spacing: 8) {
-            Text("最佳燃脂区间")
-                .font(.caption)
-                .foregroundColor(.secondary)
+            // 年龄 + 公式
+            if let profile = viewModel.userProfile {
+                HStack {
+                    Text("年龄")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                    Spacer()
+                    Text("\(profile.age) 岁")
+                        .font(.caption2)
+                }
 
-            Text(viewModel.fatBurnZone?.formattedRange ?? "--")
-                .font(.system(.title2, design: .rounded))
+                HStack {
+                    Text("最大心率")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                    Spacer()
+                    Text("220 - \(profile.age) = \(220 - profile.age)")
+                        .font(.caption2)
+                }
+                .padding(.bottom, 2)
+            }
+
+            // 区间结果
+            Text("燃脂区间 \(viewModel.fatBurnZone?.formattedRange ?? "--")")
+                .font(.system(.title3, design: .rounded))
                 .fontWeight(.bold)
                 .foregroundColor(.green)
 
+            Text("最大心率 × 60% ~ 70%")
+                .font(.system(size: 9))
+                .foregroundColor(.secondary)
+
+            // 锻炼中额外指标
             if viewModel.isWorkingOut {
-                VStack(spacing: 4) {
-                    Text("🔥 \(Int(viewModel.activeCalories)) kcal")
-                        .font(.caption)
-                    Text("⏱ \(formatted(viewModel.elapsedSeconds))")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+                Divider()
+                HStack(spacing: 16) {
+                    Text("🔥 \(Int(viewModel.activeCalories)) kcal").font(.caption)
+                    Text("⏱ \(formatted(viewModel.elapsedSeconds))").font(.caption)
                 }
+            }
+
+            // 重置年龄入口
+            Divider()
+            Button {
+                viewModel.resetProfile()
+            } label: {
+                Text("重新设置年龄")
+                    .font(.caption2)
             }
         }
     }

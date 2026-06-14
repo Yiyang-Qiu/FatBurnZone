@@ -154,6 +154,15 @@ final class WorkoutViewModel: ObservableObject {
         totalCalories = 0
     }
 
+    /// 重置年龄配置，回到设置页
+    func resetProfile() {
+        storedAge = 0
+        storedAgeSource = ""
+        userProfile = nil
+        fatBurnZone = nil
+        isSetupComplete = false
+    }
+
     // MARK: - 心率处理
 
     private func processHeartRateUpdate(_ hr: Double) {
