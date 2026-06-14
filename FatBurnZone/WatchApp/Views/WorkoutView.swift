@@ -3,6 +3,7 @@ import SwiftUI
 /// 锻炼主界面 — 两页滑动切换，每页支持表冠/触屏滚动
 struct WorkoutView: View {
     @EnvironmentObject var viewModel: WorkoutViewModel
+    @Environment(\.isLuminanceReduced) private var isLuminanceReduced
 
     @State private var selectedPage = 0
 
@@ -17,6 +18,7 @@ struct WorkoutView: View {
         }
         .tabViewStyle(.page)
         .ignoresSafeArea(edges: .bottom)
+        .animation(.easeInOut(duration: 0.4), value: isLuminanceReduced)
     }
 
     // MARK: - 第 1 页：实时监测
@@ -29,31 +31,33 @@ struct WorkoutView: View {
 
                 // 心率数字
                 Text(displayHeartRate)
-                    .font(.system(size: 50, weight: .bold, design: .rounded))
-                    .foregroundColor(heartRateColor)
+                    .font(.system(size: isLuminanceReduced ? 64 : 50,
+                                  weight: .bold, design: .rounded))
+                    .foregroundColor(isLuminanceReduced ? .white : heartRateColor)
                     .animation(.easeInOut(duration: 0.3), value: viewModel.heartRate)
                     .contentTransition(.numericText())
 
-                Text("BPM")
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
-
-                // 卡路里 + 计时
-                if viewModel.isWorkingOut {
-                    HStack(spacing: 20) {
-                        metricView(icon: "🔥", value: "\(Int(viewModel.activeCalories))", unit: "kcal", color: .orange)
-                        metricView(icon: "⏱", value: formatted(viewModel.elapsedSeconds), unit: "", color: .white)
-                    }
-                }
-
-                // 状态横幅
-                if viewModel.isWorkingOut {
-                    compactStatus
-                        .padding(.horizontal, 8)
-                } else if !viewModel.showSummary {
-                    Text("← 滑动至下一页开始 →")
+                // 熄屏时只保留表盘 + 心率数字，隐藏其余元素
+                if !isLuminanceReduced {
+                    Text("BPM")
                         .font(.caption2)
                         .foregroundColor(.secondary)
+
+                    if viewModel.isWorkingOut {
+                        HStack(spacing: 20) {
+                            metricView(icon: "🔥", value: "\(Int(viewModel.activeCalories))", unit: "kcal", color: .orange)
+                            metricView(icon: "⏱", value: formatted(viewModel.elapsedSeconds), unit: "", color: .white)
+                        }
+                    }
+
+                    if viewModel.isWorkingOut {
+                        compactStatus
+                            .padding(.horizontal, 8)
+                    } else if !viewModel.showSummary {
+                        Text("← 滑动至下一页开始 →")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                    }
                 }
             }
             .padding(.horizontal, 12)
