@@ -126,11 +126,11 @@ final class NotificationService: ObservableObject {
 
         switch status {
         case .below:
-            alertMessage = "💙 心率偏低\n建议增大坡度或速度"
+            alertMessage = "心率偏低 · 增大坡度"
         case .above:
-            alertMessage = "🔴 心率偏高\n建议降低坡度或速度"
+            alertMessage = "心率偏高 · 降低坡度"
         case .inZone:
-            break // 这种情况不会进入此分支
+            break
         }
 
         // 触觉反馈
@@ -149,9 +149,9 @@ final class NotificationService: ObservableObject {
 
         switch status {
         case .below:
-            return "心率偏低… 保持 \(remaining)s 将提醒"
+            return "偏低 · \(remaining)s"
         case .above:
-            return "心率偏高… 保持 \(remaining)s 将提醒"
+            return "偏高 · \(remaining)s"
         case .inZone:
             return nil
         }

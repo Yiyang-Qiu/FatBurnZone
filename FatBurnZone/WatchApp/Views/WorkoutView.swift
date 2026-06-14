@@ -199,29 +199,30 @@ struct WorkoutView: View {
         }
     }
 
-    // MARK: - 紧凑状态条
+    // MARK: - 紧凑状态条（极简风格）
 
     private var compactStatus: some View {
-        Group {
+        let (label, tint): (String, Color) = {
             if let message = viewModel.alertMessage {
-                Text(message)
-                    .font(.system(size: 10))
-                    .fontWeight(.medium)
-                    .multilineTextAlignment(.center)
-                    .padding(.vertical, 4)
-                    .padding(.horizontal, 8)
-                    .frame(maxWidth: .infinity)
-                    .background(alertBannerColor.opacity(0.15))
-                    .cornerRadius(6)
+                return (message, alertBannerColor)
             } else if viewModel.zoneStatus == .inZone {
-                Text("🟢 燃脂最佳")
-                    .font(.system(size: 10))
-                    .fontWeight(.medium)
-                    .padding(.vertical, 4)
-                    .padding(.horizontal, 8)
-                    .frame(maxWidth: .infinity)
-                    .background(Color.green.opacity(0.15))
-                    .cornerRadius(6)
+                return ("燃脂最佳", .green)
+            } else {
+                return ("", .clear)
+            }
+        }()
+
+        return Group {
+            if !label.isEmpty {
+                Text(label)
+                    .font(.system(size: 10, weight: .semibold))
+                    .foregroundColor(tint)
+                    .padding(.vertical, 3)
+                    .padding(.horizontal, 10)
+                    .background(
+                        Capsule()
+                            .fill(tint.opacity(0.12))
+                    )
             }
         }
     }
@@ -254,7 +255,7 @@ struct WorkoutView: View {
     private var heartRateColor: Color {
         switch viewModel.zoneStatus {
         case .inZone: return .green
-        case .below: return .blue
+        case .below: return .orange
         case .above: return .red
         }
     }
@@ -262,7 +263,7 @@ struct WorkoutView: View {
     private var alertBannerColor: Color {
         switch viewModel.zoneStatus {
         case .inZone: return .green
-        case .below: return .blue
+        case .below: return .orange
         case .above: return .red
         }
     }
