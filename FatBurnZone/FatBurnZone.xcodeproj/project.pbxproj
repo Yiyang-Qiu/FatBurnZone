@@ -1,0 +1,466 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		00054BEE751636F48EFB66E3 /* FatBurnZoneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58486418B25573D1162639A9 /* FatBurnZoneApp.swift */; };
+		07A6E80C8BE634A55113EB78 /* HeartRateZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778EB6F8074BBE6FC15281E6 /* HeartRateZone.swift */; };
+		138978C379AFD6E6C9C290D5 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A10CC545B25AC406FEE5EF4 /* Constants.swift */; };
+		22E64300A0271545214D3E1F /* ZoneGaugeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03EBD1CFFE06CD3E8B055540 /* ZoneGaugeView.swift */; };
+		31136FFEECA44BD4CE38BE23 /* WorkoutViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC70A6B8D2AF3F42FD076AD6 /* WorkoutViewModel.swift */; };
+		3611FE59DE5191F28CB5A9FE /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEC20C61D74F90C21B1E597 /* NotificationService.swift */; };
+		3642C9F95A64EFD1D9E72B33 /* HeartRateZoneCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE3FCBC9CFD53E389F3CCD9 /* HeartRateZoneCalculator.swift */; };
+		5A09A5175708BADD71E15C7F /* WorkoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3F490ADBE30743F24DCD54 /* WorkoutView.swift */; };
+		5FCAAA4919A3D844970C8C7C /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F49C4606A0827B22ED4E70 /* UserProfile.swift */; };
+		69F89555EFA5F3E11DE150BB /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F49C4606A0827B22ED4E70 /* UserProfile.swift */; };
+		A1D76972057ABA366A6CDD15 /* HeartRateZoneCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE3FCBC9CFD53E389F3CCD9 /* HeartRateZoneCalculator.swift */; };
+		A2F48AAC4F862C9906EDCDC2 /* HeartRateZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778EB6F8074BBE6FC15281E6 /* HeartRateZone.swift */; };
+		AC5A31053EC8AAF2DE66AF57 /* HealthKitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA9155BAF7AEC5827E651DF8 /* HealthKitService.swift */; };
+		D25E8A103C980FDF9ACC101E /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D9BFBCF4B10AF459BD7C96 /* iOSApp.swift */; };
+		E080AEA35EA769AE35B11D83 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33A42A734FBFB49BDD1A96A2 /* ContentView.swift */; };
+		E2572EABBCCD3CAA4424EB39 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1A5EC5E43ACA86881B549F /* SettingsView.swift */; };
+		E6F9C5E0A03C296B16F34480 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A10CC545B25AC406FEE5EF4 /* Constants.swift */; };
+		EB4C28DCCEC6B73CAD5652F1 /* SetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5010AC9F8760C48C16750E8 /* SetupView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		03EBD1CFFE06CD3E8B055540 /* ZoneGaugeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoneGaugeView.swift; sourceTree = "<group>"; };
+		0B1A5EC5E43ACA86881B549F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		33A42A734FBFB49BDD1A96A2 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		3E065B9BBED9049E61EA4BA5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		4A10CC545B25AC406FEE5EF4 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		4DDFB93B627A07DC28296E61 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		58486418B25573D1162639A9 /* FatBurnZoneApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FatBurnZoneApp.swift; sourceTree = "<group>"; };
+		6FEC20C61D74F90C21B1E597 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		778EB6F8074BBE6FC15281E6 /* HeartRateZone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartRateZone.swift; sourceTree = "<group>"; };
+		7813F8C5510E586FD9B00BBA /* FatBurnZone.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FatBurnZone.entitlements; sourceTree = "<group>"; };
+		85CDBE7BF58BDFA46D30F8C8 /* iOSApp.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = iOSApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		95F49C4606A0827B22ED4E70 /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
+		AC70A6B8D2AF3F42FD076AD6 /* WorkoutViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutViewModel.swift; sourceTree = "<group>"; };
+		AD3F490ADBE30743F24DCD54 /* WorkoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutView.swift; sourceTree = "<group>"; };
+		C658775F108B623DC2E159C5 /* WatchApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WatchApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CA9155BAF7AEC5827E651DF8 /* HealthKitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitService.swift; sourceTree = "<group>"; };
+		D0D9BFBCF4B10AF459BD7C96 /* iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSApp.swift; sourceTree = "<group>"; };
+		DAE3FCBC9CFD53E389F3CCD9 /* HeartRateZoneCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartRateZoneCalculator.swift; sourceTree = "<group>"; };
+		F5010AC9F8760C48C16750E8 /* SetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		0E0CF8431CF42F011B209B9D /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				778EB6F8074BBE6FC15281E6 /* HeartRateZone.swift */,
+				95F49C4606A0827B22ED4E70 /* UserProfile.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		1EEDA1E9B5B6748B927708D2 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				33A42A734FBFB49BDD1A96A2 /* ContentView.swift */,
+				F5010AC9F8760C48C16750E8 /* SetupView.swift */,
+				AD3F490ADBE30743F24DCD54 /* WorkoutView.swift */,
+				03EBD1CFFE06CD3E8B055540 /* ZoneGaugeView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		3E4C3E0AD77F1B0C606877E0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				85CDBE7BF58BDFA46D30F8C8 /* iOSApp.app */,
+				C658775F108B623DC2E159C5 /* WatchApp.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4DD644DBD5FAA7FF2B8B5A75 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				CA9155BAF7AEC5827E651DF8 /* HealthKitService.swift */,
+				6FEC20C61D74F90C21B1E597 /* NotificationService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		4F31C69BA854314AA0BB6548 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				4A10CC545B25AC406FEE5EF4 /* Constants.swift */,
+				DAE3FCBC9CFD53E389F3CCD9 /* HeartRateZoneCalculator.swift */,
+				0E0CF8431CF42F011B209B9D /* Models */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		5F66C7FEFC0DA85929EE27C4 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				AC70A6B8D2AF3F42FD076AD6 /* WorkoutViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		7FB46A20EE14D9F76D60ACAD /* WatchApp */ = {
+			isa = PBXGroup;
+			children = (
+				7813F8C5510E586FD9B00BBA /* FatBurnZone.entitlements */,
+				58486418B25573D1162639A9 /* FatBurnZoneApp.swift */,
+				3E065B9BBED9049E61EA4BA5 /* Info.plist */,
+				4DD644DBD5FAA7FF2B8B5A75 /* Services */,
+				5F66C7FEFC0DA85929EE27C4 /* ViewModels */,
+				1EEDA1E9B5B6748B927708D2 /* Views */,
+			);
+			path = WatchApp;
+			sourceTree = "<group>";
+		};
+		95B831C08C2DF284222BF673 = {
+			isa = PBXGroup;
+			children = (
+				DD5308D2A5D6C9C3FC9FF46D /* iOSApp */,
+				4F31C69BA854314AA0BB6548 /* Shared */,
+				7FB46A20EE14D9F76D60ACAD /* WatchApp */,
+				3E4C3E0AD77F1B0C606877E0 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		DD5308D2A5D6C9C3FC9FF46D /* iOSApp */ = {
+			isa = PBXGroup;
+			children = (
+				4DDFB93B627A07DC28296E61 /* Info.plist */,
+				D0D9BFBCF4B10AF459BD7C96 /* iOSApp.swift */,
+				0B1A5EC5E43ACA86881B549F /* SettingsView.swift */,
+			);
+			path = iOSApp;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4B43EF4756D886DE5ECB077A /* iOSApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3D30A903AA6CFAACDADEC376 /* Build configuration list for PBXNativeTarget "iOSApp" */;
+			buildPhases = (
+				9CA041FCA0998BF0B9DA4445 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = iOSApp;
+			packageProductDependencies = (
+			);
+			productName = iOSApp;
+			productReference = 85CDBE7BF58BDFA46D30F8C8 /* iOSApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+		DB6E015F66E08D300D14BED6 /* WatchApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E8ADCBA1DBD137FA127F8777 /* Build configuration list for PBXNativeTarget "WatchApp" */;
+			buildPhases = (
+				EEA2AD33A6E2BCAD0D38371E /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WatchApp;
+			packageProductDependencies = (
+			);
+			productName = WatchApp;
+			productReference = C658775F108B623DC2E159C5 /* WatchApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6DB8804F287E375FD89B76C9 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = 1B7267A30E2D7FC426097D28 /* Build configuration list for PBXProject "FatBurnZone" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 95B831C08C2DF284222BF673;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 3E4C3E0AD77F1B0C606877E0 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DB6E015F66E08D300D14BED6 /* WatchApp */,
+				4B43EF4756D886DE5ECB077A /* iOSApp */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		9CA041FCA0998BF0B9DA4445 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E6F9C5E0A03C296B16F34480 /* Constants.swift in Sources */,
+				A2F48AAC4F862C9906EDCDC2 /* HeartRateZone.swift in Sources */,
+				A1D76972057ABA366A6CDD15 /* HeartRateZoneCalculator.swift in Sources */,
+				E2572EABBCCD3CAA4424EB39 /* SettingsView.swift in Sources */,
+				69F89555EFA5F3E11DE150BB /* UserProfile.swift in Sources */,
+				D25E8A103C980FDF9ACC101E /* iOSApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EEA2AD33A6E2BCAD0D38371E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				138978C379AFD6E6C9C290D5 /* Constants.swift in Sources */,
+				E080AEA35EA769AE35B11D83 /* ContentView.swift in Sources */,
+				00054BEE751636F48EFB66E3 /* FatBurnZoneApp.swift in Sources */,
+				AC5A31053EC8AAF2DE66AF57 /* HealthKitService.swift in Sources */,
+				07A6E80C8BE634A55113EB78 /* HeartRateZone.swift in Sources */,
+				3642C9F95A64EFD1D9E72B33 /* HeartRateZoneCalculator.swift in Sources */,
+				3611FE59DE5191F28CB5A9FE /* NotificationService.swift in Sources */,
+				EB4C28DCCEC6B73CAD5652F1 /* SetupView.swift in Sources */,
+				5FCAAA4919A3D844970C8C7C /* UserProfile.swift in Sources */,
+				5A09A5175708BADD71E15C7F /* WorkoutView.swift in Sources */,
+				31136FFEECA44BD4CE38BE23 /* WorkoutViewModel.swift in Sources */,
+				22E64300A0271545214D3E1F /* ZoneGaugeView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		521D9B397EE004E874D4D1B4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = WatchApp/FatBurnZone.entitlements;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = WatchApp/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.fatburnzone.ios.watch;
+				PRODUCT_NAME = "燃脂心率";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+			};
+			name = Debug;
+		};
+		769A048AB420A7CD166BAC2C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = WatchApp/FatBurnZone.entitlements;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = WatchApp/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.fatburnzone.ios.watch;
+				PRODUCT_NAME = "燃脂心率";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+			};
+			name = Release;
+		};
+		96D3A01AE85C9E753846B451 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Release;
+		};
+		A70AD9C9ECC19751137AD2AB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = iOSApp/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.fatburnzone.ios;
+				PRODUCT_NAME = "燃脂心率";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		B6973DE0944B411BECCCBEAB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
+		D3626F411E87E16C97ECF209 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = iOSApp/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.fatburnzone.ios;
+				PRODUCT_NAME = "燃脂心率";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1B7267A30E2D7FC426097D28 /* Build configuration list for PBXProject "FatBurnZone" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B6973DE0944B411BECCCBEAB /* Debug */,
+				96D3A01AE85C9E753846B451 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		3D30A903AA6CFAACDADEC376 /* Build configuration list for PBXNativeTarget "iOSApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D3626F411E87E16C97ECF209 /* Debug */,
+				A70AD9C9ECC19751137AD2AB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		E8ADCBA1DBD137FA127F8777 /* Build configuration list for PBXNativeTarget "WatchApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				521D9B397EE004E874D4D1B4 /* Debug */,
+				769A048AB420A7CD166BAC2C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 6DB8804F287E375FD89B76C9 /* Project object */;
+}

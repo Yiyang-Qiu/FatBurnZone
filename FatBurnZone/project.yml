@@ -1,0 +1,48 @@
+name: FatBurnZone
+options:
+  bundleIdPrefix: com.fatburnzone
+  deploymentTarget:
+    watchOS: "10.0"
+    iOS: "17.0"
+  xcodeVersion: "15.0"
+  generateEmptyDirectories: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    TARGETED_DEVICE_FAMILY: "4" # Apple Watch
+
+targets:
+  # ─── Watch App（独立运行）───
+  WatchApp:
+    type: application
+    platform: watchOS
+    sources:
+      - WatchApp
+      - Shared
+    settings:
+      base:
+        INFOPLIST_FILE: WatchApp/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: com.fatburnzone.ios.watch
+        PRODUCT_NAME: 燃脂心率
+        CODE_SIGN_ENTITLEMENTS: WatchApp/FatBurnZone.entitlements
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ENABLE_PREVIEWS: true
+    dependencies: []
+    preBuildScripts: []
+    postBuildScripts: []
+
+  # ─── iOS 配套 App（可选）───
+  iOSApp:
+    type: application
+    platform: iOS
+    sources:
+      - iOSApp
+      - Shared
+    settings:
+      base:
+        INFOPLIST_FILE: iOSApp/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: com.fatburnzone.ios
+        PRODUCT_NAME: 燃脂心率
+        ENABLE_PREVIEWS: true
+    dependencies: []
