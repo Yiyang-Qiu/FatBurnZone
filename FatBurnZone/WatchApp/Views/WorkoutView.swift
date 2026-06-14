@@ -61,6 +61,7 @@ struct WorkoutView: View {
                 }
             }
             .padding(.horizontal, 12)
+            .padding(.bottom, 30) // 确保内容超出屏幕，激活表冠滚动手感
             .frame(maxWidth: .infinity)
         }
     }
@@ -158,7 +159,7 @@ struct WorkoutView: View {
         .cornerRadius(12)
     }
 
-    // MARK: - 信息区（公式 & 区间）
+    // MARK: - 信息区
 
     private var infoSection: some View {
         VStack(spacing: 8) {
@@ -168,23 +169,12 @@ struct WorkoutView: View {
                     Spacer()
                     Text("\(profile.age) 岁").font(.caption2)
                 }
-
-                HStack {
-                    Text("最大心率").font(.caption2).foregroundColor(.secondary)
-                    Spacer()
-                    Text("220 - \(profile.age) = \(220 - profile.age)").font(.caption2)
-                }
-                .padding(.bottom, 2)
             }
 
             Text("燃脂区间 \(viewModel.fatBurnZone?.formattedRange ?? "--")")
                 .font(.system(.title3, design: .rounded))
                 .fontWeight(.bold)
                 .foregroundColor(.green)
-
-            Text("最大心率 × 60% ~ 70%")
-                .font(.system(size: 9))
-                .foregroundColor(.secondary)
 
             if viewModel.isWorkingOut {
                 Divider()
